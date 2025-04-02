@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>URL_Shortener</title>
+</head>
+    <body>
+        <div class="container">
+            <h1>URL Shortener</h1>
+            <form id="shorten-form">
+                <div>
+                    <label for="url">Enter URL:</label> <br>
+                    <input type="url" id="original-url" required> 
+                </div><br>
+                <div>
+                    <label for="text">Custom Short URL (Optional)</label><br>
+                    <input type="text" id="custom-url"><br>
+                </div>
+                <button type="submit">Shorten</button><br>
+                <div>
+                <h2>Shortened URL</h2>
+                <ul id="shorten-urls"></ul>
+                </div>
+            </form>
+        </div>
+        <script>
+            document.getElementById('shorten-form').addEventListener('submit', (event)=>{
+                event.preventDefault();
+
+            //  gettting user input   
+            let originalUrl = document.getElementById('original-url').value;
+            let customUrl = document.getElementById('custom-url').value;
+            let shortenUrl = document.getElementById("shorten-urls"); 
+            let shortCode;
+            if(customUrl){
+                shortCode=customUrl
+            }else{
+                shortCode = "short.ly/"+Math.random().toString(36).slice(2, 7)
+            }   
+            console.log(originalUrl, shortCode);       
+            });
+           
+            
+            
+        </script>
+    </body>
+</html>
