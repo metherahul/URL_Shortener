@@ -5,12 +5,13 @@ A simple and efficient URL shortener built using **HTML, CSS, JavaScript, and No
 ## Features
 - Simple and responsive UI
 - Clean and modern design using HTML and CSS
-- JavaScript functionality (In Progress)
-- Node.js backend for generating and storing short links (In Progress)
+- JavaScript functionality (Partially Implemented)
+- Node.js backend for hosting the project on localhost (Implemented)
+
 
 ## Technologies Used
 - **Frontend:** HTML, CSS, JavaScript (In Progress)
-- **Backend:** Node.js (In Progress)
+- **Backend:** Node.js (Implemented)
 
 ## Installation
 1. Clone the repository:
@@ -21,7 +22,15 @@ A simple and efficient URL shortener built using **HTML, CSS, JavaScript, and No
    ```sh
    cd URL_Shortener
    ```
-3. Open the `index.html` file in your browser.
+3. Install dependencies:
+   ```sh
+   npm install
+   ```
+4. ```sh
+   node server.js
+   ```
+5. Open http://localhost:3000 in your browser. 
+
 
 ## Future Enhancements
 - Complete JavaScript functionality for URL shortening.
