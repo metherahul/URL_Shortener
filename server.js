@@ -1,0 +1,35 @@
+import http from "http";
+import fs from "fs/promises";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const server = http.createServer(async(req, res) => {
+  try{
+  let filePath = req.url === "/" ? "index.html" : req.url;
+  filePath = path.join(__dirname, filePath);
+
+  // Detect content type
+  let ext = path.extname(filePath);
+  let contentType = "text/html";
+  if (ext === ".css") contentType = "text/css";
+  if (ext === ".js") contentType = "text/javascript";
+
+  const data =await fs.readFile(filePath);
+      res.writeHead(200, { "Content-Type": contentType });
+      res.end(data);
+  }catch(error){   
+      res.writeHead(404, { "Content-Type": "text/plain" });
+      res.end("File not found");     
+    }
+
+}
+);
+
+server.listen(3000, () => {
+  console.log("Server running at http://localhost:3000");
+});
+
+

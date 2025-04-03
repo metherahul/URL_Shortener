@@ -1,0 +1,21 @@
+{
+  "name": "url_shortener",
+  "version": "1.0.0",
+  "description": "A simple and efficient URL shortener built using **HTML, CSS, JavaScript, and Node.js**. This project is currently in progress, with the frontend completed and backend functionality being implemented.",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/metherahul/URL_Shortener.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/metherahul/URL_Shortener/issues"
+  },
+  "homepage": "https://github.com/metherahul/URL_Shortener#readme"
+}
