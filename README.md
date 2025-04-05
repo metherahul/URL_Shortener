@@ -6,12 +6,12 @@ A simple and efficient URL shortener built using **HTML, CSS, JavaScript, and No
 - Simple and responsive UI
 - Clean and modern design using HTML and CSS
 - JavaScript functionality (Partially Implemented)
-- Node.js backend for hosting the project on localhost (Implemented)
+- Node.js backend for handling POST request and storing data in JSON (In Progress)
 
 
 ## Technologies Used
-- **Frontend:** HTML, CSS, JavaScript (In Progress)
-- **Backend:** Node.js (Implemented)
+- **Frontend:** HTML, CSS, JavaScript
+- **Backend:** Backend: Node.js (Basic implementation completed, more features coming)
 
 ## Installation
 1. Clone the repository:
@@ -33,8 +33,10 @@ A simple and efficient URL shortener built using **HTML, CSS, JavaScript, and No
 
 
 ## Future Enhancements
-- Complete JavaScript functionality for URL shortening.
-- Implement a Node.js backend for generating and storing short links.
+-Add GET route for redirecting short URLs.
+- Generate unique short URLs automatically.
+- Add frontend feedback on success/error.
+- Store URLs with timestamp or analytics (optional).
 - Enable link tracking and analytics.
 
 ## Contributing
