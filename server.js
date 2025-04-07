@@ -7,17 +7,40 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const mimeTypes = {
+  ".html": "text/html",
+  ".css": "text/css",
+  ".js": "text/javascript",
+  ".json": "application/json",
+  ".png": "image/png",
+  ".jpg": "image/jpeg",
+  ".svg": "image/svg+xml",
+};
+
 const server = http.createServer(async(req, res) => {
   if (req.method==="GET"){
+     // Handle /api/urls route first
+  if (req.url === "/api/urls") {
+    try {
+      const data = await fs.readFile("urls.json", "utf-8");
+      const urlList = JSON.parse(data);
+
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify(urlList));
+    } catch (err) {
+      res.writeHead(500, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Unable to read saved URLs" }));
+    }
+    return;
+  } 
   try{
   let filePath = req.url === "/" ? "index.html" : req.url;
   filePath = path.join(__dirname, filePath);
 
   // Detect content type
-  let ext = path.extname(filePath);
-  let contentType = "text/html";
-  if (ext === ".css") contentType = "text/css";
-  if (ext === ".js") contentType = "text/javascript";
+const ext = path.extname(filePath);
+const contentType = mimeTypes[ext] || "text/plain";
+
 
   const data =await fs.readFile(filePath);
       res.writeHead(200, { "Content-Type": contentType });
@@ -36,21 +59,29 @@ req.on("end", async () => {
   try {
     const { originalURL, shortURL } = JSON.parse(body);
 
-    // Step 1: readFile
-    let urlLIST = [];
+    //  readFile
+    let savedUrls = [];
     try {
       const data = await fs.readFile("urls.json", "utf-8");
-      urlLIST = JSON.parse(data);
+      savedUrls = JSON.parse(data);
     } catch (err) {
-      urlLIST = [];
+      savedUrls = [];
+    }
+    
+    //checking for duplicate data
+    const alreadyExists = savedUrls.some(url => url.shortURL === shortURL);
+    if (alreadyExists){
+      res.writeHead(409, {"Content-Type": "application/json"});
+      res.end(JSON.stringify({error: "shortURL already exists"}));
+      return
     }
 
-    // Step 2: push new URL
-    urlLIST.push({ originalURL, shortURL });
+    // push new URL
+    savedUrls.push({ originalURL, shortURL });
 
-    // Step 3: writeFile
+    //  writeFile
     try {
-      await fs.writeFile("urls.json", JSON.stringify(urlLIST, null, 2));
+      await fs.writeFile("urls.json", JSON.stringify(savedUrls, null, 2));
       res.writeHead(201, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ message: "Data saved successfully" }));
     } catch (err) {
@@ -70,5 +101,3 @@ req.on("end", async () => {
 server.listen(3000, () => {
   console.log("Server running at http://localhost:3000");
 });
-
-
