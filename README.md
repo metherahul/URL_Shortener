@@ -7,7 +7,7 @@ A simple and efficient URL shortener built using **HTML, CSS, JavaScript, and No
 - Clean and modern design using HTML and CSS
 - JavaScript handles user input and server communication
 - **Node.js backend** for handling POST and GET requests
-- Stores URLs in a local `urls.json` file
+- Stores URLs in **MongoDB Compass** using **MongoClient**
 - Duplicate short URL detection
 
 
@@ -40,13 +40,13 @@ URL_Shortener/
 ├── index.html        # Frontend HTML
 ├── style.css         # Styling
 ├── script.js         # Client-side JS logic
-├── server.js         # Node.js backend
-└── urls.json         # Stores submitted URLs locally
+└── server.js         # Node.js backend and storage shifted to compass
+
 
 
 ## 🧠 Current Backend Endpoints
 - POST /:
-   Accepts `originalURL` and `shortURL`, and stores them in `urls.json` if it's not a duplicate.
+   Accepts `originalURL` and `shortURL`, and stores them in `MongoDB Compass` if it's not a duplicate.
 
 
 - GET /api/urls:
@@ -55,14 +55,6 @@ URL_Shortener/
 ## 📌 In Progress
 - renderUrls() function to dynamically display shortened URLs on the page.
 - Refactor code structure and improve modularity.
-
-
-## 📈 Future Enhancements
-- Add GET route to redirect short URLs directly.
-- Automatically generate short URLs (random or hash-based).
-- Add UI feedback for success and error messages.
-- Replace local storage (urls.json) with MongoDB.
-- Add timestamps and analytics (optional).
 
 
 ## 🤝 Contributing
