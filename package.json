@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/metherahul/URL_Shortener/issues"
   },
-  "homepage": "https://github.com/metherahul/URL_Shortener#readme"
+  "homepage": "https://github.com/metherahul/URL_Shortener#readme",
+  "dependencies": {
+    "mongodb": "^6.15.0"
+  }
 }

@@ -2,6 +2,7 @@ import http from "http";
 import fs from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
+import { MongoClient } from "mongodb";
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -17,14 +18,29 @@ const mimeTypes = {
   ".svg": "image/svg+xml",
 };
 
+// MongoDB setup
+const mongoURL = "mongodb://localhost:27017"; // Default MongoDB URL
+const client = new MongoClient(mongoURL);
+
+let collection;
+async function connectToDB() {
+  try {
+    await client.connect();
+    const db = client.db("urlShortener"); // Database name
+    collection = db.collection("urls");
+    console.log("Connected to MongoDB");
+  } catch (err) {
+    console.error("MongoDB connection failed:", err);
+  }
+}
+async function startServer() {
+  await connectToDB();
 const server = http.createServer(async(req, res) => {
   if (req.method==="GET"){
-     // Handle /api/urls route first
+     // Handle API route
   if (req.url === "/api/urls") {
     try {
-      const data = await fs.readFile("urls.json", "utf-8");
-      const urlList = JSON.parse(data);
-
+     const urlList = await collection.find({}).toArray();
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify(urlList));
     } catch (err) {
@@ -57,47 +73,39 @@ const contentType = mimeTypes[ext] || "text/plain";
 );
 req.on("end", async () => {
   try {
-    const { originalURL, shortURL } = JSON.parse(body);
+    const { originalUrl,customUrl} = JSON.parse(body);
 
-    //  readFile
-    let savedUrls = [];
-    try {
-      const data = await fs.readFile("urls.json", "utf-8");
-      savedUrls = JSON.parse(data);
-    } catch (err) {
-      savedUrls = [];
+    if (!originalUrl) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Missing originalUrl" }));
+      return;
     }
+    // Generate customUrl if not provided
+    let shortCode =customUrl || "custom.ly/" + Math.random().toString(36).slice(2, 7);
     
     //checking for duplicate data
-    const alreadyExists = savedUrls.some(url => url.shortURL === shortURL);
+    const alreadyExists = await collection.findOne({customUrl: shortCode });
     if (alreadyExists){
       res.writeHead(409, {"Content-Type": "application/json"});
-      res.end(JSON.stringify({error: "shortURL already exists"}));
+      res.end(JSON.stringify({error: "customUrl already exists"}));
       return
     }
 
-    // push new URL
-    savedUrls.push({ originalURL, shortURL });
+// Save to MongoDB
+await collection.insertOne({ originalUrl,customUrl: shortCode });
+res.writeHead(201, { "Content-Type": "application/json" });
+res.end(JSON.stringify({ message: "Data saved to MongoDB" }));
 
-    //  writeFile
-    try {
-      await fs.writeFile("urls.json", JSON.stringify(savedUrls, null, 2));
-      res.writeHead(201, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ message: "Data saved successfully" }));
-    } catch (err) {
-      res.writeHead(500, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ error: "Failed to save data" }));
-    }
-
-  } catch (error) {
-    res.writeHead(400, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ error: "Invalid JSON or bad request" }));
-  }
+} catch (error) {
+res.writeHead(500, { "Content-Type": "application/json" });
+res.end(JSON.stringify({ error: "Failed to save to database" }));
+}
 });
 }
-}
-);
+});
 
 server.listen(3000, () => {
   console.log("Server running at http://localhost:3000");
 });
+}
+startServer();
